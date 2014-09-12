@@ -1,8 +1,10 @@
 package io.github.ledge.engine.state;
 
+import io.github.ledge.engine.GameEngine;
+
 public interface GameState {
 
-    public void init(GameState state);
+    public void init(GameEngine engine);
 
     public void update(float delta);
 
