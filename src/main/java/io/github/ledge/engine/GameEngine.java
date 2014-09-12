@@ -19,5 +19,4 @@ public interface GameEngine {
     public GameState getCurrentState();
 
     public void switchState(GameState state);
-
 }
