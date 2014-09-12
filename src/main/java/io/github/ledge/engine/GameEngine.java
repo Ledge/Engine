@@ -8,7 +8,7 @@ public interface GameEngine {
 
     public void run(GameState state);
 
-    public void halt();
+    public void shutdown();
 
     public boolean isRunning();
 

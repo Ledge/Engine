@@ -37,7 +37,7 @@ public class LedgeEngine implements GameEngine {
     }
 
     @Override
-    public void halt() {
+    public void shutdown() {
         this.isRunning = false;
     }
 
