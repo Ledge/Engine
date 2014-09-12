@@ -10,6 +10,8 @@ public interface GameEngine {
 
     public boolean isRunning();
 
+    public boolean isDisposed();
+
     public void dispose();
 
     public void shutdown();
