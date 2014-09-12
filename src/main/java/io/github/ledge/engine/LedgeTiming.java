@@ -16,7 +16,7 @@ public class LedgeTiming implements Timing {
 
     @Override
     public long getMilliSeconds() {
-        return System.nanoTime(); // Will be overriden to use the LWJGL Sys class
+        return System.nanoTime(); // TODO: use LWJGL system class
     }
 
     @Override
