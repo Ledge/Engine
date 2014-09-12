@@ -14,5 +14,5 @@ public class GameThread {
         gameThread = Thread.currentThread();
     }
 
-    // Todo: Add submitTask(Runnable) method(s)...
+    // TODO: add submitTask(Runnable) method(s)...
 }
