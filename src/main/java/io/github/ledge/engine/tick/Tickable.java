@@ -5,8 +5,8 @@ package io.github.ledge.engine.tick;
  */
 public interface Tickable {
 
-	/**
-	 * Tick this Tickable Object.
-	 */
+    /**
+     * Tick this Tickable Object.
+     */
     public void tick();
 }

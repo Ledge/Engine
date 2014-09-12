@@ -4,7 +4,8 @@ public class GameThread {
 
     private static volatile Thread gameThread;
 
-    private GameThread() {}
+    private GameThread() {
+    }
 
     public static boolean isGameThread() {
         return Thread.currentThread() == gameThread;

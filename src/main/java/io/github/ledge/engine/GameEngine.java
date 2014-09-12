@@ -8,15 +8,15 @@ public interface GameEngine {
 
     public void run(GameState state);
 
-	public void halt();
+    public void halt();
 
     public boolean isRunning();
 
-	public void dispose();
+    public void dispose();
 
     public boolean isDisposed();
 
-	public void switchState(GameState state);
+    public void switchState(GameState state);
 
     public GameState getCurrentState();
 }

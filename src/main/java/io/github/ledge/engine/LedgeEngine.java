@@ -3,8 +3,6 @@ package io.github.ledge.engine;
 import io.github.ledge.engine.state.GameState;
 import io.github.ledge.engine.tick.Timing;
 
-import java.util.Iterator;
-
 public class LedgeEngine implements GameEngine {
 
     private GameState currentState = null;
@@ -20,11 +18,11 @@ public class LedgeEngine implements GameEngine {
         if (isInitialized)
             return;
 
-		this.isInitialized = true;
-		this.isRunning = false;
-		this.isDisposed = false;
+        this.isInitialized = true;
+        this.isRunning = false;
+        this.isDisposed = false;
 
-		this.timing = new LedgeTiming(); // TODO: allow the Timing to be customised
+        this.timing = new LedgeTiming(); // TODO: allow the Timing to be customised
     }
 
     @Override
@@ -38,20 +36,20 @@ public class LedgeEngine implements GameEngine {
         this.startGameLoop();
     }
 
-	@Override
-	public void halt() {
-		this.isRunning = false;
-	}
+    @Override
+    public void halt() {
+        this.isRunning = false;
+    }
 
     @Override
     public boolean isRunning() {
         return this.isRunning;
     }
 
-	@Override
-	public void dispose() {
-		this.isDisposed = true;
-	}
+    @Override
+    public void dispose() {
+        this.isDisposed = true;
+    }
 
     @Override
     public boolean isDisposed() {
