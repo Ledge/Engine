@@ -7,11 +7,11 @@ import java.util.Iterator;
 
 public class LedgeEngine implements GameEngine {
 
-    private GameState currentState;
+    private GameState currentState = null;
 
-    private boolean isInitialized;
-    private boolean isRunning;
-    private boolean isDisposed;
+    private boolean isInitialized = false;
+    private boolean isRunning = false;
+    private boolean isDisposed = false;
 
     private Timing timing;
 
@@ -20,11 +20,11 @@ public class LedgeEngine implements GameEngine {
         if (isInitialized)
             return;
 
-        // TODO: initialize everything
+		this.isInitialized = true;
+		this.isRunning = false;
+		this.isDisposed = false;
 
-       // this.timing = new LedgeTiming();
-
-        this.isInitialized = true;
+		this.timing = new LedgeTiming(); // TODO: allow the Timing to be customised
     }
 
     @Override
@@ -32,10 +32,10 @@ public class LedgeEngine implements GameEngine {
         if (!this.isInitialized)
             this.init();
 
-        switchState(state);
+        this.switchState(state);
         this.isRunning = true;
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        startGameLoop();
+        this.startGameLoop();
     }
 
     @Override
@@ -50,17 +50,17 @@ public class LedgeEngine implements GameEngine {
 
     @Override
     public void dispose() {
-
+		this.isDisposed = true;
     }
 
     @Override
     public void shutdown() {
-
+		this.isRunning = false;
     }
 
     @Override
     public GameState getCurrentState() {
-        return null;
+        return this.currentState;
     }
 
     @Override
