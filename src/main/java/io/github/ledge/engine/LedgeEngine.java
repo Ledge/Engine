@@ -38,24 +38,24 @@ public class LedgeEngine implements GameEngine {
         this.startGameLoop();
     }
 
+	@Override
+	public void halt() {
+		this.isRunning = false;
+	}
+
     @Override
     public boolean isRunning() {
         return this.isRunning;
     }
 
+	@Override
+	public void dispose() {
+		this.isDisposed = true;
+	}
+
     @Override
     public boolean isDisposed() {
         return this.isDisposed;
-    }
-
-    @Override
-    public void dispose() {
-		this.isDisposed = true;
-    }
-
-    @Override
-    public void shutdown() {
-		this.isRunning = false;
     }
 
     @Override
