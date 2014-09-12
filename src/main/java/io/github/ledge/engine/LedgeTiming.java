@@ -2,17 +2,11 @@ package io.github.ledge.engine;
 
 import io.github.ledge.engine.tick.Timing;
 
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicLong;
-
 public class LedgeTiming implements Timing {
-
-    private AtomicLong last = new AtomicLong(0);
-    private AtomicLong delta = new AtomicLong(0);
 
     @Override
     public float getDelta() {
-        return this.delta.get();
+        return 0;
     }
 
     @Override
@@ -26,7 +20,8 @@ public class LedgeTiming implements Timing {
     }
 
     @Override
-    public Iterator<Float> runTimeStep() {
-        return null;
+    public float runTimeStep() {
+        return 0;
     }
 }
+

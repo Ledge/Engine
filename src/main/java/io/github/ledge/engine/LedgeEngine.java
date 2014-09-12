@@ -19,11 +19,23 @@ public class LedgeEngine implements GameEngine {
     public void init() {
         if (isInitialized)
             return;
+
+        // TODO: initialize everything
+
+       // this.timing = new LedgeTiming();
+
+        this.isInitialized = true;
     }
 
     @Override
     public void run(GameState state) {
+        if (!this.isInitialized)
+            this.init();
 
+        switchState(state);
+        this.isRunning = true;
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        startGameLoop();
     }
 
     @Override
@@ -53,18 +65,14 @@ public class LedgeEngine implements GameEngine {
 
     @Override
     public void switchState(GameState state) {
-
+        this.currentState = state;
     }
 
     private void startGameLoop() {
         while (this.isRunning) {
             // TODO: check if we're actually playing
-
-            Iterator<Float> timeStep = this.timing.runTimeStep();
-            while (timeStep.hasNext()) {
-                float delta = timeStep.next();
-                this.currentState.update(delta);
-            }
+            float delta = this.timing.runTimeStep();
+            this.currentState.update(delta);
 
             // GameThread.processPendingTasks();
         }

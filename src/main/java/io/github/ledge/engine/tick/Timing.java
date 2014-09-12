@@ -1,7 +1,5 @@
 package io.github.ledge.engine.tick;
 
-import java.util.Iterator;
-
 public interface Timing {
 
     public float getDelta();
@@ -10,5 +8,5 @@ public interface Timing {
 
     public long getMilliSeconds();
 
-    public Iterator<Float> runTimeStep();
+    public float runTimeStep();
 }
