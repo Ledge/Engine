@@ -67,7 +67,7 @@ public class LedgeEngine implements GameEngine {
         if (this.currentState != null) {
             this.pendingState = state;
         } else {
-
+            this.switchState(state);
         }
     }
 
