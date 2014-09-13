@@ -6,6 +6,7 @@ import io.github.ledge.engine.tick.Timing;
 public class LedgeEngine implements GameEngine {
 
     private GameState currentState = null;
+    private GameState pendingState = null;
 
     private boolean isInitialized = false;
     private boolean isRunning = false;
@@ -30,7 +31,7 @@ public class LedgeEngine implements GameEngine {
         if (!this.isInitialized)
             this.init();
 
-        this.switchState(state);
+        this.setState(state);
         this.isRunning = true;
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         this.startGameLoop();
@@ -62,19 +63,44 @@ public class LedgeEngine implements GameEngine {
     }
 
     @Override
-    public void switchState(GameState state) {
-        this.currentState = state;
+    public void setState(GameState state) {
+        if (this.currentState != null) {
+            this.pendingState = state;
+        } else {
+
+        }
     }
 
     private void startGameLoop() {
         while (this.isRunning) {
+
+            handleStateChange();
+
+            if (this.currentState == null)
+                shutdown();
+
             // TODO: check if we're actually playing
             float delta = this.timing.runTimeStep();
             this.currentState.update(delta);
-
             // GameThread.processPendingTasks();
         }
 
         this.isRunning = false;
+    }
+
+    private void handleStateChange() {
+        if (this.pendingState != null) {
+            switchState(this.pendingState);
+            this.pendingState = null;
+        }
+    }
+
+    private void switchState(GameState state) {
+        if (this.currentState != null) {
+            this.currentState.dispose();
+        }
+
+        this.currentState = state;
+        state.init(this);
     }
 }

@@ -16,7 +16,7 @@ public interface GameEngine {
 
     public boolean isDisposed();
 
-    public void switchState(GameState state);
+    public void setState(GameState state);
 
     public GameState getCurrentState();
 }
