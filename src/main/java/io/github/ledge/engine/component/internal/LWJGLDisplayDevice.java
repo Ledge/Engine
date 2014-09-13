@@ -22,7 +22,7 @@ public class LWJGLDisplayDevice implements DisplayDevice {
             Display.setDisplayMode(Display.getDesktopDisplayMode());
             Display.setFullscreen(state);
         } catch (LWJGLException e) {
-            throw new RuntimeException("Failed to switch to fullscreen!");
+            throw new RuntimeException("Failed to switch to fullscreen: " + e.getLocalizedMessage());
         }
     }
 }
