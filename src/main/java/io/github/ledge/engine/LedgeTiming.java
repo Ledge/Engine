@@ -1,6 +1,7 @@
 package io.github.ledge.engine;
 
 import io.github.ledge.engine.tick.Timing;
+import org.lwjgl.Sys;
 
 public class LedgeTiming implements Timing {
 
@@ -16,7 +17,7 @@ public class LedgeTiming implements Timing {
 
     @Override
     public long getMilliSeconds() {
-        return System.nanoTime(); // TODO: use LWJGL system class
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
     }
 
     @Override
