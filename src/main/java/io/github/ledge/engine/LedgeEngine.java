@@ -31,7 +31,7 @@ public class LedgeEngine implements GameEngine {
         if (!this.isInitialized)
             this.init();
 
-        this.setState(state);
+        this.setCurrentState(state);
         this.isRunning = true;
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         this.startGameLoop();
@@ -63,7 +63,7 @@ public class LedgeEngine implements GameEngine {
     }
 
     @Override
-    public void setState(GameState state) {
+    public void setCurrentState(GameState state) {
         if (this.currentState != null) {
             this.pendingState = state;
         } else {
