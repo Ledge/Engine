@@ -5,6 +5,9 @@ import io.github.ledge.engine.tick.Timing;
 
 public class LedgeEngine implements GameEngine {
 
+    public static final int UPDATE_INTERVAL = 1000 / 20;
+    public static final int RENDER_INTERVAL = 1000 / 60;
+
     private GameState currentState = null;
     private GameState pendingState = null;
 
@@ -72,17 +75,41 @@ public class LedgeEngine implements GameEngine {
     }
 
     private void startGameLoop() {
-        while (this.isRunning) {
+        this.timing.runTimeStep();
 
-            handleStateChange();
+        long lastUpdate = this.timing.getMilliSeconds();
+        long lastRender = this.timing.getMilliSeconds();
+
+        while (this.isRunning) {
+            long now = this.timing.getMilliSeconds();
+
+            long sinceLastUpdate = now - lastUpdate;
+            long sinceLastRender = now - lastRender;
+
+            if (sinceLastUpdate >= LedgeEngine.UPDATE_INTERVAL) {
+                this.currentState.update(sinceLastUpdate);
+                lastUpdate = now;
+                sinceLastUpdate = 0;
+
+                this.currentState.render(sinceLastUpdate);
+                lastRender = now;
+                sinceLastRender = 0;
+
+                this.handleStateChange();
+            } else if (sinceLastRender >= LedgeEngine.RENDER_INTERVAL) {
+                this.currentState.render(sinceLastUpdate);
+                lastRender = now;
+                sinceLastRender = 0;
+            } else {
+                try {
+                    Thread.sleep(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (this.currentState == null)
-                shutdown();
-
-            // TODO: check if we're actually playing
-            float delta = this.timing.runTimeStep();
-            this.currentState.update(delta);
-            // GameThread.processPendingTasks();
+                this.shutdown();
         }
 
         this.isRunning = false;

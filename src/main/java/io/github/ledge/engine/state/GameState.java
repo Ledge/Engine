@@ -8,7 +8,7 @@ public interface GameState {
 
     public void update(float delta);
 
-    public void render();
+    public void render(float interpolation);
 
     public void handleInput(float delta);
 
