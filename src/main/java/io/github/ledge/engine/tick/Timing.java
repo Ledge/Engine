@@ -7,19 +7,19 @@ package io.github.ledge.engine.tick;
 public interface Timing {
 
     /**
-     * Gets the delta to be used by update methods, in the form of the number of nanoseconds passed since the last
-     * update.
+     * Gets the last recorded delta to be used by update methods, in the form of the number of milliseconds passed since
+     * the last step.
      *
-     * @return The delta in milliseconds
+     * @return The last recorded delta in milliseconds
      */
-    public float getDelta();
+    public int getDelta();
 
     /**
-     * Gets the approximate amount of frames that have been rendered in the past second.
+     * Gets the last recorded approximate amount of steps that have taken place in the past second.
      *
-     * @return The approximate amount of frames
+     * @return The last recorded approximate amount of steps
      */
-    public float getFps();
+    public float getSps();
 
     /**
      * Gets the system time in milliseconds.
@@ -29,9 +29,9 @@ public interface Timing {
     public long getMilliSeconds();
 
     /**
-     * Runs a time step and returns the delta to be used for the update methods.
+     * Runs a time step and returns the delta to be used for update methods.
      *
      * @return The delta to be used for the update methods
      */
-    public float runTimeStep();
+    public int runTimeStep();
 }

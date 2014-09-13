@@ -5,14 +5,21 @@ import org.lwjgl.Sys;
 
 public class LedgeTiming implements Timing {
 
-    @Override
-    public float getDelta() {
-        return 0;
+    private int currentDelta = 0;
+    private long currentSps = 0;
+
+    private long lastTimeStep = this.getMilliSeconds();
+    private long lastSps = this.getMilliSeconds();
+
+    private int stepsThisSecond = 0;
+
+    public int getDelta() {
+        return this.currentDelta;
     }
 
     @Override
-    public float getFps() {
-        return 0;
+    public float getSps() {
+        return this.currentSps;
     }
 
     @Override
@@ -21,8 +28,20 @@ public class LedgeTiming implements Timing {
     }
 
     @Override
-    public float runTimeStep() {
-        return 0;
+    public int runTimeStep() {
+        long now = this.getMilliSeconds();
+        this.currentDelta = (int) (now - this.lastTimeStep);
+        this.lastTimeStep = now;
+
+        long lastSpsDifference = now - lastSps;
+        if (lastSpsDifference > 1000)
+        {
+            this.currentSps = (1000 / lastSpsDifference) * this.stepsThisSecond;
+            this.stepsThisSecond = 0;
+        }
+        this.stepsThisSecond++;
+
+        return this.getDelta();
     }
 }
 
