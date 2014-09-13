@@ -3,23 +3,26 @@ package io.github.ledge.engine;
 import io.github.ledge.engine.tick.Timing;
 import org.lwjgl.Sys;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 public class LedgeTiming implements Timing {
 
-    private int currentDelta = 0;
-    private long currentSps = 0;
+    private AtomicInteger currentDelta = new AtomicInteger(0);
+    private AtomicLong currentSps = new AtomicLong(0);
 
-    private long lastTimeStep = this.getMilliSeconds();
-    private long lastSps = this.getMilliSeconds();
+    private AtomicLong lastTimeStep = new AtomicLong(this.getMilliSeconds());
+    private AtomicLong lastSps = new AtomicLong(this.getMilliSeconds());
 
-    private int stepsThisSecond = 0;
+    private AtomicInteger stepsThisSecond = new AtomicInteger(0);
 
     public int getDelta() {
-        return this.currentDelta;
+        return this.currentDelta.get();
     }
 
     @Override
     public float getSps() {
-        return this.currentSps;
+        return this.currentSps.get();
     }
 
     @Override
@@ -30,16 +33,16 @@ public class LedgeTiming implements Timing {
     @Override
     public int runTimeStep() {
         long now = this.getMilliSeconds();
-        this.currentDelta = (int) (now - this.lastTimeStep);
-        this.lastTimeStep = now;
+        this.currentDelta.set((int) (now - this.lastTimeStep.get()));
+        this.lastTimeStep.set(now);
 
-        long lastSpsDifference = now - lastSps;
+        long lastSpsDifference = now - lastSps.get();
         if (lastSpsDifference > 1000)
         {
-            this.currentSps = (1000 / lastSpsDifference) * this.stepsThisSecond;
-            this.stepsThisSecond = 0;
+            this.currentSps.set((1000 / lastSpsDifference) * this.stepsThisSecond.get());
+            this.stepsThisSecond.set(0);
         }
-        this.stepsThisSecond++;
+        this.stepsThisSecond.incrementAndGet();
 
         return this.getDelta();
     }
