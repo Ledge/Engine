@@ -85,6 +85,9 @@ public class LedgeEngine implements GameEngine {
 
             long sinceLastUpdate = now - lastUpdate;
             long sinceLastRender = now - lastRender;
+            
+            if (this.currentState == null)
+                this.shutdown();
 
             if (sinceLastUpdate >= LedgeEngine.UPDATE_INTERVAL) {
                 this.currentState.update(sinceLastUpdate);
@@ -107,9 +110,6 @@ public class LedgeEngine implements GameEngine {
                     e.printStackTrace();
                 }
             }
-
-            if (this.currentState == null)
-                this.shutdown();
         }
 
         this.isRunning = false;
