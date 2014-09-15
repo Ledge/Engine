@@ -4,7 +4,7 @@ import io.github.ledge.engine.component.DisplayDevice;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 
-public class LWJGLDisplayDevice implements DisplayDevice {
+public class LwjglDisplayDevice implements DisplayDevice {
 
     @Override
     public boolean isCloseRequested() {
