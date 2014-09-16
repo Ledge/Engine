@@ -5,12 +5,12 @@ import org.lwjgl.LWJGLUtil;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 
 public class LwjglUtils {
 
+    // TODO: make it export to the game dir (have an appdata folder or so)
     private static final String NATIVES_EXPORT_DIR = "./natives";
 
     private static final String NATIVES = "natives/";
@@ -20,42 +20,52 @@ public class LwjglUtils {
 
     public static void intializeLwjgl() {
         identifyPlatform();
+        addLibPath(new File(NATIVES_EXPORT_DIR).toPath());
     }
 
     private static void identifyPlatform() {
         switch (LWJGLUtil.getPlatform()) {
-            case LWJGLUtil.PLATFORM_WINDOWS:
-                unpack(WINDOWS + "OpenAL64.dll");
-                unpack(WINDOWS + "lwjgl64.dll");
-                unpack(WINDOWS + "jinput-dx8_64.dll");
-                unpack(WINDOWS + "jinput-raw_64.dll");
-
-                unpack(WINDOWS + "OpenAL32.dll");
-                unpack(WINDOWS + "lwjgl.dll");
-                unpack(WINDOWS + "jinput-dx8.dll");
-                unpack(WINDOWS + "jinput-raw.dll");
-
+            case LWJGLUtil.PLATFORM_WINDOWS: {
+                if (is64Bit()) {
+                    unpack(WINDOWS + "OpenAL64.dll");
+                    unpack(WINDOWS + "lwjgl64.dll");
+                    unpack(WINDOWS + "jinput-dx8_64.dll");
+                    unpack(WINDOWS + "jinput-raw_64.dll");
+                } else {
+                    unpack(WINDOWS + "OpenAL32.dll");
+                    unpack(WINDOWS + "lwjgl.dll");
+                    unpack(WINDOWS + "jinput-dx8.dll");
+                    unpack(WINDOWS + "jinput-raw.dll");
+                }
                 unpack(WINDOWS + "jinput-wintab.dll");
                 break;
-            case LWJGLUtil.PLATFORM_LINUX:
-                unpack(LINUX + "libopenal64.so");
-                unpack(LINUX + "liblwjgl64.so");
-                unpack(LINUX + "libjinput-linux64.so");
-
-                unpack(LINUX + "libopenal32.so");
-                unpack(LINUX + "liblwjgl32.so");
-                unpack(LINUX + "libjinput-linux.so");
+            }
+            case LWJGLUtil.PLATFORM_LINUX: {
+                if (is64Bit()) {
+                    unpack(LINUX + "libopenal64.so");
+                    unpack(LINUX + "liblwjgl64.so");
+                    unpack(LINUX + "libjinput-linux64.so");
+                } else {
+                    unpack(LINUX + "libopenal32.so");
+                    unpack(LINUX + "liblwjgl32.so");
+                    unpack(LINUX + "libjinput-linux.so");
+                }
                 break;
-            case LWJGLUtil.PLATFORM_MACOSX:
+            }
+            case LWJGLUtil.PLATFORM_MACOSX: {
                 unpack(MAC_OSX + "liblwjgl.jnilib");
                 unpack(MAC_OSX + "libopenal.dylib");
                 unpack(MAC_OSX + "libjinput-osx.jnilib");
                 break;
+            }
             default:
                 throw new RuntimeException("Failed to identify the platform!");
         }
+    }
 
-        addLibPath(new File(NATIVES_EXPORT_DIR).toPath());
+    private static boolean is64Bit() {
+        String osArch = System.getProperty("os.arch");
+        return "amd64".equals(osArch) || "x86_64".equals(osArch);
     }
 
     private static void unpack(String resource) {
@@ -74,7 +84,7 @@ public class LwjglUtils {
                 int len;
                 byte[] buffer = new byte[8192];
 
-                while ((len = inputStream.read()) > -1) {
+                while ((len = inputStream.read(buffer)) > -1) {
                     outputStream.write(buffer, 0, len);
                 }
 
