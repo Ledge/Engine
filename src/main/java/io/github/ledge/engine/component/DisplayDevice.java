@@ -25,4 +25,9 @@ public interface DisplayDevice {
      * @param state If the DisplayDevice should be in full screen mode or not
      */
     public void setFullScreen(boolean state);
+
+    /**
+     * Prepares the screen to render something new
+     */
+    public void prepareToRender();
 }

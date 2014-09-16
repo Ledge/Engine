@@ -58,6 +58,19 @@ public class LedgeEngine implements GameEngine {
         this.isRunning = true;
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         this.startGameLoop();
+
+        this.apocalypse();
+    }
+
+    private void apocalypse() {
+        for (SubSystem subSystem : getSubSystems()) {
+            subSystem.shutdown();
+        }
+
+        if (this.currentState != null) {
+            this.currentState.dispose();
+            this.currentState = null;
+        }
     }
 
     @Override
@@ -72,7 +85,14 @@ public class LedgeEngine implements GameEngine {
 
     @Override
     public void dispose() {
-        this.isDisposed = true;
+        if (!this.isRunning) {
+            this.isDisposed = true;
+            this.isInitialized = false;
+
+            for (SubSystem subSystem : getSubSystems()) {
+                subSystem.dispose();
+            }
+        }
     }
 
     @Override
