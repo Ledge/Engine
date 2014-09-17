@@ -13,10 +13,12 @@ import org.lwjgl.opengl.GLContext;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class LwjglGraphicsSystem implements SubSystem {
+public class LwjglGraphicsSystem extends LwjglSubSystem {
 
     @Override
     public void init(GameEngine engine) {
+        super.init(engine);
+
         LwjglDisplayDevice displayDevice = new LwjglDisplayDevice();
 
         GameRegistry.register(DisplayDevice.class, displayDevice);

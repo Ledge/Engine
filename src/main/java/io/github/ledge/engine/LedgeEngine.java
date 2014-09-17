@@ -1,15 +1,14 @@
 package io.github.ledge.engine;
 
+import com.google.common.collect.Queues;
 import io.github.ledge.engine.component.DisplayDevice;
-import io.github.ledge.engine.component.internal.LwjglDisplayDevice;
 import io.github.ledge.engine.state.GameState;
 import io.github.ledge.engine.subsystem.SubSystem;
-import io.github.ledge.engine.subsystem.lwjgl.LwjglGraphicsSystem;
 import io.github.ledge.engine.tick.Timing;
-import org.lwjgl.opengl.Display;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 public class LedgeEngine implements GameEngine {
 
@@ -19,7 +18,7 @@ public class LedgeEngine implements GameEngine {
     private GameState currentState = null;
     private GameState pendingState = null;
 
-    private boolean isInitialized = false;
+    private boolean isInitialised = false;
     private boolean isRunning = false;
     private boolean isDisposed = false;
 
@@ -27,31 +26,37 @@ public class LedgeEngine implements GameEngine {
 
     private Deque<SubSystem> subSystems = new ArrayDeque<>();
 
-    @Override
-    public void init() {
-        if (isInitialized)
-            return;
-
-        this.isInitialized = true;
-        this.isRunning = false;
-        this.isDisposed = false;
-
-        this.initializeGameSystem();
-
-        this.timing = GameRegistry.get(Timing.class);
-
-        for (SubSystem subSystem : this.getSubSystems()) {
-            subSystem.init(this);
-        }
+    public LedgeEngine(List<SubSystem> subSystems) {
+        this.subSystems = Queues.newArrayDeque(subSystems);
     }
 
-    private void initializeGameSystem() {
-        addSubSystem(new LwjglGraphicsSystem());
+    public Deque<SubSystem> getSubSystems() {
+        return this.subSystems;
+    }
+
+    @Override
+    public void init() {
+        try {
+            if (isInitialised)
+                return;
+
+            for (SubSystem subSystem : this.getSubSystems()) {
+                subSystem.init(this);
+            }
+
+            this.timing = GameRegistry.get(Timing.class);
+            if (timing == null)
+                throw new IllegalStateException("Timing handler is not registered! Oops!");
+
+            this.isInitialised = true;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialise the game engine!", e);
+        }
     }
 
     @Override
     public void run(GameState state) {
-        if (!this.isInitialized)
+        if (!this.isInitialised)
             this.init();
 
         this.setCurrentState(state);
@@ -87,7 +92,7 @@ public class LedgeEngine implements GameEngine {
     public void dispose() {
         if (!this.isRunning) {
             this.isDisposed = true;
-            this.isInitialized = false;
+            this.isInitialised = false;
 
             for (SubSystem subSystem : getSubSystems()) {
                 subSystem.dispose();
@@ -112,18 +117,6 @@ public class LedgeEngine implements GameEngine {
         } else {
             this.switchState(state);
         }
-    }
-
-    public Deque<SubSystem> getSubSystems() {
-        return this.subSystems;
-    }
-
-    public void addSubSystem(SubSystem subSystem) {
-        this.subSystems.add(subSystem);
-    }
-
-    public void remove(SubSystem subSystem) {
-        this.subSystems.remove(subSystem);
     }
 
     private void startGameLoop() {
