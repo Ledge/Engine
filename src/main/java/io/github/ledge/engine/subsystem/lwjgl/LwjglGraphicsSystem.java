@@ -65,9 +65,8 @@ public class LwjglGraphicsSystem extends LwjglSubSystem {
 
     private void initOpenGl() {
         canRun();
-        enableOpenGl();
-
         glViewport(0, 0, Display.getWidth(), Display.getHeight());
+        enableOpenGl();
     }
 
     private void canRun() {
