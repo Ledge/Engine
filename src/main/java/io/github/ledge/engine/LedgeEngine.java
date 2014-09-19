@@ -5,6 +5,7 @@ import io.github.ledge.engine.component.DisplayDevice;
 import io.github.ledge.engine.state.GameState;
 import io.github.ledge.engine.subsystem.SubSystem;
 import io.github.ledge.engine.tick.Timing;
+import io.github.ledge.input.InputSystem;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -47,6 +48,12 @@ public class LedgeEngine implements GameEngine {
             this.timing = GameRegistry.get(Timing.class);
             if (timing == null)
                 throw new IllegalStateException("Timing handler is not registered! Oops!");
+
+            if (GameRegistry.get(DisplayDevice.class) == null)
+                throw new IllegalStateException("DisplayDevice not registered!");
+
+            if (GameRegistry.get(InputSystem.class) == null)
+                throw new IllegalStateException("InputSystem not registered!");
 
             this.isInitialised = true;
         } catch (Exception e) {

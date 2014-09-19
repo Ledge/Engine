@@ -1,5 +1,6 @@
 package io.github.ledge.input;
 
+import io.github.ledge.common.math.Vector2i;
 import io.github.ledge.engine.GameEngine;
 import io.github.ledge.input.device.KeyboardDevice;
 import io.github.ledge.input.device.MouseDevice;
@@ -12,7 +13,6 @@ public class InputSystem {
     private KeyboardDevice keyboardDevice;
 
     public void init() {
-
     }
 
     public void shutdown() {
@@ -20,7 +20,8 @@ public class InputSystem {
     }
 
     public void update(float delta) {
-
+        processMouseInput(delta);
+        processKeyboardInput(delta);
     }
 
     public MouseDevice getMouseDevice() {
@@ -41,6 +42,19 @@ public class InputSystem {
 
     private void processMouseInput(float delta) {
 
+        Vector2i mouseDelta = this.mouseDevice.getDelta();
+
+        // Process mouse x-axis events
+        if (mouseDelta.x != 0) {
+
+        }
+
+        // Process mouse y-axis events
+        if (mouseDelta.y != 0) {
+
+        }
+
+        // Process click queue
     }
 
     private void processKeyboardInput(float delta) {
