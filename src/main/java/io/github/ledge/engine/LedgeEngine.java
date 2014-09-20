@@ -127,15 +127,16 @@ public class LedgeEngine implements GameEngine {
     }
 
     private void startGameLoop() {
-        this.timing.runTimeStep();
+        // TODO: adapt game loop to actually use new LedgeTiming implementation properly
+        this.timing.stepTick();
 
-        long lastUpdate = this.timing.getMilliSeconds();
-        long lastRender = this.timing.getMilliSeconds();
+        long lastUpdate = this.timing.getCurrentTime();
+        long lastRender = this.timing.getCurrentTime();
 
         DisplayDevice displayDevice = GameRegistry.get(DisplayDevice.class);
 
         while (this.isRunning && !displayDevice.isCloseRequested()) {
-            long now = this.timing.getMilliSeconds();
+            long now = this.timing.getCurrentTime();
 
             long sinceLastUpdate = now - lastUpdate;
             long sinceLastRender = now - lastRender;

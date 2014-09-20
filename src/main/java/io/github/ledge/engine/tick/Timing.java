@@ -5,33 +5,81 @@ package io.github.ledge.engine.tick;
  * related to it.
  */
 public interface Timing {
+    /**
+     * Gets the current time, represented in milliseconds.
+     *
+     * @return the current time in milliseconds
+     */
+    public long getCurrentTime();
 
     /**
-     * Gets the last recorded delta to be used by update methods, in the form of the number of milliseconds passed since
-     * the last step.
+     * Gets the time that the current tick began at.
      *
-     * @return The last recorded delta in milliseconds
+     * @return the time that the current tick began at
      */
-    public int getDelta();
+    public long getCurrentTick();
 
     /**
-     * Gets the last recorded approximate amount of steps that have taken place in the past second.
+     * Gets the difference between the current tick time and the last tick time.
      *
-     * @return The last recorded approximate amount of steps
+     * @return the difference between the current tick time and the last tick time.
      */
-    public float getSps();
+    public long getTickInterval();
 
     /**
-     * Gets the system time in milliseconds.
+     * Gets the difference between the current tick time and the last update time. This is more commonly known as the
+     * delta for update methods and can be also used as interpolation for render methods.
      *
-     * @return The system time in milliseconds
+     * @return the difference between the current tick time and the last update time.
      */
-    public long getMilliSeconds();
+    public long getUpdateInterval();
 
     /**
-     * Runs a time step and returns the delta to be used for update methods.
+     * Gets the difference between the current tick time and the last render time.
      *
-     * @return The delta to be used for the update methods
+     * @return the difference between the current tick time and the last render time.
      */
-    public int runTimeStep();
+    public long getRenderInterval();
+
+    /**
+     * Gets an approximation of the number of ticks that occurred in the last second.
+     *
+     * @return an approximation of the number of ticks that occurred in the last second.
+     */
+    public long getTicksPerSecond();
+
+    /**
+     * Gets an approximation of the number of updates that occurred in the last second.
+     *
+     * @return an approximation of the number of updates that occurred in the last second.
+     */
+    public long getUpdatesPerSecond();
+
+    /**
+     * Gets an approximation of the number of renders that occurred in the last second. This is more commonly known as
+     * FPS (frames per second) but its name is chosen so as to ensure consistency is kept in naming within the
+     * interface.
+     *
+     * @return an approximation of the number of renders that occurred in the last second.
+     */
+    public long getRendersPerSecond();
+
+    /**
+     * Gets whether or not update methods should be called to maintain the updates-per-second at the desired level.
+     *
+     * @return true if the update methods should be called, else false
+     */
+    public boolean shouldUpdate();
+
+    /**
+     * Gets whether or not render methods should be called to maintain the renders-per-second at the desired level.
+     *
+     * @return true if the render methods should be called, else false
+     */
+    public boolean shouldRender();
+
+    /**
+     * Update all values in the class based on the initialising of a new tick at the exact time the method is called.
+     */
+    public void stepTick();
 }
