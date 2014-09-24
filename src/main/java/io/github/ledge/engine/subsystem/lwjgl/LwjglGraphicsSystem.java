@@ -6,6 +6,7 @@ import io.github.ledge.engine.component.DisplayDevice;
 import io.github.ledge.engine.component.internal.LwjglDisplayDevice;
 import io.github.ledge.engine.state.GameState;
 import io.github.ledge.engine.subsystem.SubSystem;
+import io.github.ledge.engine.tick.Timing;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -33,13 +34,15 @@ public class LwjglGraphicsSystem extends LwjglSubSystem {
 
     @Override
     public void postUpdate(GameState state, float delta) {
-        Display.update();
-        Display.sync(60);
+        if (GameRegistry.get(Timing.class).shouldRender()) {
+            Display.update();
+            Display.sync(60);
 
-        state.render(delta);
+            state.render(GameRegistry.get(Timing.class).getRenderInterval());
 
-        if (Display.wasResized())
-            glViewport(0, 0, Display.getWidth(), Display.getHeight());
+            if (Display.wasResized())
+                glViewport(0, 0, Display.getWidth(), Display.getHeight());
+        }
     }
 
     @Override

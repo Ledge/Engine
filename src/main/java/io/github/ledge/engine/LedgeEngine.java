@@ -139,24 +139,19 @@ public class LedgeEngine implements GameEngine {
 
             GameThread.setGameThread();
 
-            if (this.timing.shouldRender()) {
-                this.currentState.render(this.timing.getRenderInterval());
-            }
+            this.handleStateChange();
 
-            if (this.timing.shouldUpdate()) {
-                this.handleStateChange();
-
+            if (this.timing.shouldUpdate())
                 this.currentState.update(this.timing.getUpdateInterval());
 
-                for (SubSystem subSystem : getSubSystems()) {
-                    subSystem.preUpdate(this.currentState, this.timing.getUpdateInterval()); // should be delta
-                }
+            for (SubSystem subSystem : getSubSystems()) {
+                subSystem.preUpdate(this.currentState, this.timing.getUpdateInterval());
+            }
 
-                // GameThread.flushAwaitingThreads();
+            // GameThread.flushAwaitingThreads();
 
-                for (SubSystem subSystem : getSubSystems()) {
-                    subSystem.postUpdate(this.currentState, this.timing.getUpdateInterval()); // should be delta
-                }
+            for (SubSystem subSystem : getSubSystems()) {
+                subSystem.postUpdate(this.currentState, this.timing.getUpdateInterval());
             }
         }
 
