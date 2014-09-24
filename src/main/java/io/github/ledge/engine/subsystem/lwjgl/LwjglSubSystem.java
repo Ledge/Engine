@@ -12,6 +12,7 @@ public abstract class LwjglSubSystem implements SubSystem {
     public void init(GameEngine engine) {
         if (!isInitialised) {
             LwjglUtils.intializeLwjgl();
+            isInitialised = true;
         }
     }
 }
