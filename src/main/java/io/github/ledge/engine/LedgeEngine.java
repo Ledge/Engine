@@ -127,55 +127,36 @@ public class LedgeEngine implements GameEngine {
     }
 
     private void startGameLoop() {
-        // TODO: adapt game loop to actually use new LedgeTiming implementation properly
         this.timing.stepTick();
-
-        long lastUpdate = this.timing.getCurrentTime();
-        long lastRender = this.timing.getCurrentTime();
 
         DisplayDevice displayDevice = GameRegistry.get(DisplayDevice.class);
 
         while (this.isRunning && !displayDevice.isCloseRequested()) {
-            long now = this.timing.getCurrentTime();
-
-            long sinceLastUpdate = now - lastUpdate;
-            long sinceLastRender = now - lastRender;
+            this.timing.stepTick();
 
             if (this.currentState == null)
                 this.shutdown();
 
             GameThread.setGameThread();
 
-            if (sinceLastUpdate >= LedgeEngine.UPDATE_INTERVAL) {
-                // this.currentState.update(sinceLastUpdate);
-                lastUpdate = now;
-                sinceLastUpdate = 0;
+            if (this.timing.shouldRender()) {
+                this.currentState.render(this.timing.getRenderInterval());
+            }
 
-                // this.currentState.update(sinceLastUpdate);
-                lastRender = now;
-                sinceLastRender = 0;
-
+            if (this.timing.shouldUpdate()) {
                 this.handleStateChange();
-            } else if (sinceLastRender >= LedgeEngine.RENDER_INTERVAL) {
-                // this.currentState.render(sinceLastUpdate);
-                lastRender = now;
-                sinceLastRender = 0;
-            } else {
-                try {
-                    Thread.sleep(0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                this.currentState.update(this.timing.getUpdateInterval());
+
+                for (SubSystem subSystem : getSubSystems()) {
+                    subSystem.preUpdate(this.currentState, this.timing.getUpdateInterval()); // should be delta
                 }
-            }
 
-            for (SubSystem subSystem : getSubSystems()) {
-                subSystem.preUpdate(this.currentState, now); // should be delta
-            }
+                // GameThread.flushAwaitingThreads();
 
-            // GameThread.flushAwaitingThreads();
-
-            for (SubSystem subSystem : getSubSystems()) {
-                subSystem.postUpdate(this.currentState, now); // should be delta
+                for (SubSystem subSystem : getSubSystems()) {
+                    subSystem.postUpdate(this.currentState, this.timing.getUpdateInterval()); // should be delta
+                }
             }
         }
 
